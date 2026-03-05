@@ -1,7 +1,10 @@
 {
-  "name": "threathub-co",
+  "name": "@threathubco/threathub.co",
+  "author": "Luke <luke@glitch.je>",
+  "description": "Documentation website for ThreatHub",
+  "version": "1.0.0",
   "type": "module",
-  "version": "0.0.1",
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

@@ -1,0 +1,90 @@
+---
+title: Install ThreatHub
+---
+import  { FileTree } from "@astrojs/starlight/components";
+
+ThreatHub is currently in the early development phase. While it is functional, not everything is streamlined so far. In the future, it is likely the installation will be done via Docker.
+
+ThreatHub consists of two programs:
+- **Ingestor** - A Java based program that runs in the background and periodically fetches data from Defender and handles other jobs
+- **Web App** - The Next.js based web app for managing the data
+
+## Prerequisites
+It is recommended the software be installed on Linux. It has been officially tested and working correctly on Ubuntu v24.04.1.
+
+You will require the following software:
+- **Node.js** - Recommnded at least `v22.0.0`. Minimum supported version is `v20.9.0`
+- **Java** - Java 17 is the minimum required version. OpenJDK is recommended
+- **MySQL**
+- **Redis**
+
+### Install Node.js
+The easiest way to install Node.js is using the Node Version Manager (nvm). [More information here](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-22-04)
+```shell
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install 22.0.0
+nvm use 22.0.0
+nvm alias default 22.0.0
+```
+
+### Install Java
+The below should work on Ubuntu v24. If it doesn't work on your system, there are plenty of tutorials online.
+```shell
+sudo apt update && sudo apt install openjdk-17-jre -y
+```
+:::tip
+If you are wanting to build from source instead then you can install `openjdk-17-jdk` instead.
+:::
+
+### Install MySQL
+```shell
+sudo apt update && sudo apt install mysql-server -y
+```
+Then verify the service is running:
+```shell
+sudo systemctl start mysql
+```
+We will finish the setup on the next page.
+
+### Install Redis
+```shell
+sudo apt update && sudo apt install redis-server -y
+```
+Then verify the service is running:
+```shell
+sudo systemctl start redis-server
+```
+
+{/* ## Install Script
+For your convenience, we have provided a script that will automatically download and install the latest release of ThreatHub and the necessary dependencies. 
+
+:::note[Please Note]
+This may not work on all systems. It has been tested on Ubuntu v24.04.1 and macOS 13.6.3.
+:::
+
+Paste the following into your terminal:
+```shell
+curl -sL https://install.threathub.co | bash -s -
+``` */}
+
+## Manual Install
+If the above install script doesn't work or you would prefer to perform the install yourself, follow this guide.
+
+:::note
+This section is in development and is not complete!
+:::
+1. Install the prerequisites listed above
+2. Create folder for ThreatHub. For the purposes of this tutorial, let's say it's in `/home/threathub`
+3. Download and extract the source code for the [Web App](https://github.com/ThreatHubCo/WebApp) (or `git clone`) to a directory called `webapp`
+4. Download a compiled jar from the [Ingestor](https://github.com/ThreatHubCo/Ingestor) repository. Click the link in the README file for the latest build and place this into a directory named `ingestor`
+5. By now you should have the following structure:
+<FileTree>
+- /home/threathub/
+  - webapp/
+  - ingestor/
+    
+</FileTree>
+
+## Next Steps
+Move on to the next page to see setup instructions.

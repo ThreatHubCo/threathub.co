@@ -1,24 +1,33 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: "ThreatHub",
+			social: [{ icon: "github", label: "GitHub", href: "https://github.com/ThreatHubCo/threathub.co" }],
 			sidebar: [
 				{
-					label: 'Guides',
+					label: "Getting Started",
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
+						{ label: "What is ThreatHub?", slug: "docs/basics/about" },
+						{ label: "Installation", slug: "docs/basics/install" },
+						{ label: "Setup", slug: "docs/basics/setup" },
+						{ label: "Running", slug: "docs/basics/running" },
+						{ label: "HaloPSA Setup", slug: "docs/basics/setup-halopsa" }
 					],
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: "For Admins",
+					items: [
+						{ label: "Scheduled Jobs", slug: "docs/reference/scheduled-jobs" },
+						{ label: "Agent Permissions", slug: "docs/reference/agent-permissions" },
+						{ label: "Command Line Arguments", slug: "docs/reference/command-line-arguments" },
+						{ label: "Health Checks (Monitoring)", slug: "docs/reference/health-checks" },
+						{ label: "Configuration", slug: "docs/reference/config" }
+					]
 				},
 			],
 		}),
