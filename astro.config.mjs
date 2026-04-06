@@ -22,7 +22,7 @@ export default defineConfig({
 				{
 					label: "For Admins",
 					items: [
-						{ label: "Scheduled Jobs", slug: "docs/reference/scheduled-jobs" },
+						{ label: "Scheduled Tasks", slug: "docs/reference/scheduled-tasks" },
 						{ label: "Agent Permissions", slug: "docs/reference/agent-permissions" },
 						{ label: "Command Line Arguments", slug: "docs/reference/command-line-arguments" },
 						{ label: "Health Checks (Monitoring)", slug: "docs/reference/health-checks" },

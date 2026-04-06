@@ -11,16 +11,51 @@ CREATE USER 'threathub'@'localhost' IDENTIFIED BY 'PASSWORD';
 GRANT ALL PRIVILEGES ON threathub.* TO 'threathub'@'localhost';
 FLUSH PRIVILEGES;
 ```
-2. Create a database
+2. Create another MySQL user for the report feature, replacing `PASSWORD` with a different strong password to the user you just created. Don't grant any privileges just yet.
+```sql
+CREATE USER 'threathub_report_user'@'localhost' IDENTIFIED BY 'PASSWORD';
+```
+3. Create a database
 ```sql
 CREATE DATABASE threathub;
 ```
-3. Select the database
+4. Select the database
 ```sql
 USE threathub; 
 ```
-4. Copy the contents of `/home/threathub/webapp/init.sql` and paste it into the MySQL console
-5. Done! The database is set up
+5. Copy the contents of `/home/threathub/webapp/init.sql` and paste it into the MySQL console
+6. Run the following to grant specific permissions to the report user you created earlier. This is required to prevent malicious SQL being written into reports by users.
+```sql
+CREATE VIEW agents_safe AS
+SELECT
+  id,
+  email,
+  display_name,
+  role,
+  created_at,
+  updated_at,
+  deleted_at
+FROM agents
+
+GRANT SELECT ON threathub.agents_safe TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.devices TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.vulnerabilities TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.vulnerability_exploit_types TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.vulnerability_references TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.vulnerability_tags TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.vulnerability_affected_software TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.customers TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.software TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.customer_vulnerability_software TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.customer_vulnerabilities TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.device_notes TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.device_vulnerabilities TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.device_vulnerabilities_history TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.remediation_tickets TO 'threathub_report_user'@'localhost';
+
+FLUSH PRIVILEGES;
+```
+7. Done! The database is set up
 
 ## Setup Web App
 1. Move into the WebApp directory and install dependencies
@@ -33,24 +68,27 @@ npm install
 NEXTAUTH_SECRET=(RANDOM SECRET STRING)
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
-MYSQL_USER=(MYSQL USERNAME)
+MYSQL_USER=threathub
 MYSQL_PASSWORD=(MYSQL PASSWORD)
 MYSQL_DATABASE=threathub
-REDIS_HOST=localhost
-REDIS_PORT=6379
-NEXTAUTH_URL=(YOUR WEBSITE URL)
+MYSQL_REPORT_USER=threathub_report_user
+MYSQL_REPORT_PASSWORD=(MYSQL REPORT USER PASSWORD)
 ```
+
 |Variable|Description|
 |--------|-----------|
 |`NEXTAUTH_SECRET`|A random secret string used to hash tokens and sign/encrypt session cookies. It is essential this is set to long random string|
 |`MYSQL_HOST`|The address of the MySQL server. If running on the same machine it is likely `localhost` or `127.0.0.1`|
 |`MYSQL_PORT`|The port of the MySQL server. By default this is 3306 and it is unlikely you will need to change it|
-|`MYSQL_USER`|The username you created inside MySQL during the Setup stage for ThreatHub to use|
+|`MYSQL_USER`|The username you created inside MySQL during the Setup stage for ThreatHub to use. This was likely `threathub`, but if you chose something else, please change it here|
 |`MYSQL_PASSWORD`|The password for the user you created inside MySQL during the Setup stage|
 |`MYSQL_DATABASE`|The name of the MySQL database you crated during the Setup stage. You likely named this `threathub` but if not please change it here|
+|`MYSQL_REPORT_USER`|The username you created inside MySQL for the report user. This is likely `threathub_report_user` but if you chose something else, please change it here|
+|`MYSQL_REPORT_PASSWORD`|The password for the report user in MySQL|
 |`REDIS_HOST`|The address of the Redis server. If running on the same machine it is likely `localhost` or `127.0.0.1`|
 |`REDIS_PORT`|The port of the MySQL server. By default this is 6379 and it is unlikely you will need to change it|
 |`NEXTAUTH_URL`|The URL that the Web App will be hosted on. For example, `threathub.mycompany.com`. This is used for authentication|
+
 3. Build the project
 ```shell
 npm run build
@@ -80,3 +118,5 @@ defender.baseApiUrl=https://api-eu3.securitycenter.microsoft.com
 
 ## Setup Entra ID App
 TODO
+
+This is essentially creating an app registration in Entra ID with read permissions vulnerabilities, machines and software under WindowsDefenderATP, and setting up OAuth credentials on the same app registration (or separate if you prefer).
