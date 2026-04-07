@@ -23,8 +23,8 @@ CREATE DATABASE threathub;
 ```sql
 USE threathub; 
 ```
-5. Copy the contents of `/home/threathub/webapp/init.sql` and paste it into the MySQL console
-6. Run the following to grant specific permissions to the report user you created earlier. This is required to prevent malicious SQL being written into reports by users.
+5. We need to run a script in the Web App. Essentially, run `npm install` in the directory and then run `npm run run-migrations`
+6. Now back to MySQL, run the following to grant specific permissions to the report user you created earlier. This is required to prevent malicious SQL being written into reports by users.
 ```sql
 CREATE VIEW agents_safe AS
 SELECT
