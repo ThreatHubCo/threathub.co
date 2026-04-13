@@ -1,0 +1,179 @@
+---
+title: Scripting API
+---
+import { FileTree } from "@astrojs/starlight/components";
+
+ThreatHub supports writing JavaScript code to handle certain actions. This currently includes Automatic vulnerability escalation.
+
+Scripts are in the `scripts` directory of ThreatHub Ingestor. The directory and example scripts will be created on first run.
+The file tree should look something like the below:
+
+<FileTree>
+- /home/threathub/
+  - ingestor/
+    - scripts/
+      - software-escalation.js
+    - ThreatHub-Ingestor-0.0.1.jar
+    - ...
+    
+</FileTree>
+
+:::caution[Warning]
+The script API does not have much security at the moment! Be careful with the scripts that you write as you can:
+
+- Create, delete & change anything in the database
+- Create HTTP requests to anywhere
+- Read sensitive config values
+:::
+
+## API Reference
+There are numerous APIs that can be accessed via the global `api` object:
+```js
+api.config
+api.http
+api.log
+api.sql
+api.tickets
+```
+
+### Config
+##### `getAll()`
+Returns all configuration values as a JavaScript object.
+
+Example output:
+```json
+{
+  "SITE_URL": "https://threathub.example.com",
+  "ENABLE_TICKETING": true
+}
+```
+
+##### `get(key: string)`
+Returns a single configuration value by key.
+
+Parameters:
+- `key` - The config key name. Must be one of [these enum values](https://github.com/ThreatHubCo/Ingestor/blob/master/src/main/java/co/threathub/ingestor/config/ConfigKey.java)
+
+Example output:
+```json
+https://threathub.example.com
+```
+
+### HTTP
+##### `get(url: string)`
+Sends a GET request to the specified URL.
+
+Example output:
+```json
+{
+  "status": 200,
+  "body": "{\"message\":\"ok\"}",
+  "headers": {
+    "content-type": ["application/json"]
+  }
+}
+```
+
+##### `post(url: string, body: string)`
+Sends a POST request to the specified URL with a request body.
+
+Example output:
+```json
+{
+  "status": 200,
+  "body": "{\"message\":\"ok\"}",
+  "headers": {
+    "content-type": ["application/json"]
+  }
+}
+```
+
+##### `request(req: object)`
+Sends a custom HTTP request.
+
+Parameters:
+- `req` - A configuration object with the following fields:
+  - `method` (optional) - HTTP method (GET, POST, PUT, DELETE). Defaults to GET.
+  - `url` (required) - The target URL.
+  - `body` (optional) - Request body as a string.
+  - `headers` (optional) - Object of key-value header pairs.
+  - `timeout` (optional) - Timeout in milliseconds. Defaults to 2000.
+
+Example output:
+```json
+{
+  "status": 200,
+  "body": "{\"message\":\"ok\"}",
+  "headers": {
+    "content-type": ["application/json"]
+  }
+}
+```
+
+### Log
+##### `info(text: string)`
+Logs an informational message to the terminal.
+
+##### `warn(text: string)`
+Logs an warning message to the terminal.
+
+##### `error(text: string)`
+Logs an error message to the terminal.
+
+##### `debug(text: string)`
+Logs a debug message to the terminal.
+
+### SQL
+##### `query(sql: string, params?: array)`
+Executes a SQL query;
+
+Parameters:
+- `sql` - The SQL query
+- `params` (optional) - An array of parameters
+
+Example usage:
+```json
+// No parameters
+const customers = await api.sql.query("SELECT * FROM customers");
+console.log(customers); // [{ id: 1, name: "Test Customer", ... }]
+
+// With parameters
+const customers = await api.sql.query("SELECT * FROM customers WHERE name = ?", ["Test Customer"]);
+console.log(customers); // [{ id: 1, name: "Test Customer", ... }]
+```
+
+### Tickets
+##### `create(customerId: number, softwareId: number, model?: object)`
+Creates a ticket for the given customer and software.
+
+:::note
+Please note that this method is subject to change soon. Currently this is built with vulnerability escalation tickets in mind and does not support other content.
+:::
+
+Parameters:
+- `customerId` - The ID of the customer
+- `softwareId` - The ID of the software
+- `model` (optional) - Data to pass to the Freemarker template
+  - `publicExploit` - boolean
+  - `cveCount` - number
+  - `deviceCount` - number
+  - `highestCveSeverity` - string
+  - `softwareLink` string | null
+
+##### `lookup(ticketId: string)`
+Retrieves a ticket by its ID.
+
+Example output:
+```json
+{
+  "id": 12345,
+  "dateoccurred": "2025-01-01T12:00:00Z",
+  "summary": "Example ticket summary",
+  "details": "Detailed description of the issue",
+  "team": "Support",
+  "client_id": 1001,
+  "last_update": "2025-01-02T15:30:00Z",
+  "status_id": 8,
+  "isClosed": true
+}
+```

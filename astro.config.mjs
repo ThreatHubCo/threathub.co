@@ -17,19 +17,20 @@ export default defineConfig({
 						{ label: "Setup", slug: "docs/basics/setup" },
 						{ label: "Running", slug: "docs/basics/running" },
 						{ label: "HaloPSA Setup", slug: "docs/basics/setup-halopsa" }
-					],
+					]
 				},
 				{
 					label: "For Admins",
 					items: [
+						{ label: "Scripting API", slug: "docs/reference/scripting" },
 						{ label: "Scheduled Tasks", slug: "docs/reference/scheduled-tasks" },
 						{ label: "Agent Permissions", slug: "docs/reference/agent-permissions" },
 						{ label: "Command Line Arguments", slug: "docs/reference/command-line-arguments" },
 						{ label: "Health Checks (Monitoring)", slug: "docs/reference/health-checks" },
 						{ label: "Configuration", slug: "docs/reference/config" }
 					]
-				},
-			],
-		}),
-	],
+				}
+			]
+		})
+	]
 });
