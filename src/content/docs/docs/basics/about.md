@@ -4,6 +4,8 @@ title: What is ThreatHub?
 
 ThreatHub is a vulnerability management platform built on top of Microsoft Defender.
 
+[Screenshots](https://imgur.com/a/threathub-screenshots-RQORD7t)
+
 ## What is this exactly?
 ThreatHub was born after my experiences dealing with Microsoft Defender vulnerabilities while working at an MSP (Managed Service Provider).
 
