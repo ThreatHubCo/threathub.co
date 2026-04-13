@@ -2,12 +2,31 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
+const googleAnalyticsId = "G-JJ04KZTWTZ";
+
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
 		starlight({
 			title: "ThreatHub",
-			social: [{ icon: "github", label: "GitHub", href: "https://github.com/ThreatHubCo/threathub.co" }],
+			head: [
+				{
+					tag: "script",
+					attrs: {
+						src: `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`
+					}
+				},
+				{
+					tag: "script",
+					content: `
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', '${googleAnalyticsId}');
+					`
+				}
+			],
+			social: [{ icon: "github", label: "GitHub", href: "https://github.com/ThreatHubCo" }],
 			sidebar: [
 				{
 					label: "Getting Started",
