@@ -31,13 +31,15 @@ SELECT
   id,
   email,
   display_name,
-  role,
   created_at,
   updated_at,
   deleted_at
 FROM agents
 
 GRANT SELECT ON threathub.agents_safe TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.roles TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.role_permissions TO 'threathub_report_user'@'localhost';
+GRANT SELECT ON threathub.agent_roles TO 'threathub_report_user'@'localhost';
 GRANT SELECT ON threathub.devices TO 'threathub_report_user'@'localhost';
 GRANT SELECT ON threathub.vulnerabilities TO 'threathub_report_user'@'localhost';
 GRANT SELECT ON threathub.vulnerability_exploit_types TO 'threathub_report_user'@'localhost';
@@ -73,6 +75,8 @@ MYSQL_PASSWORD=(MYSQL PASSWORD)
 MYSQL_DATABASE=threathub
 MYSQL_REPORT_USER=threathub_report_user
 MYSQL_REPORT_PASSWORD=(MYSQL REPORT USER PASSWORD)
+REDIS_HOST=localhost
+REDIS_PORT=6379
 ```
 
 |Variable|Description|
